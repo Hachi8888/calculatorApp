@@ -25,7 +25,7 @@ class ViewController: UIViewController {
     // 演算子（+、 -、 ×、 ÷）デフォルトは + とする
     var prop: property = .plus
     
-    // 演算子の列挙体
+    // 演算子の列挙体を設定する
     enum property {
      case plus // 足す
      case minus // 引く
@@ -38,6 +38,7 @@ class ViewController: UIViewController {
     // 画面の表示用のラベル
     @IBOutlet weak var resultLabel: UILabel!
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -46,16 +47,15 @@ class ViewController: UIViewController {
     
     // 数字ボタンを押したときの処理
     @IBAction func tappedNum(_ sender: UIButton) {
-        
+        // タグ番号をもとに、選んだボタンの数字をnumberOnScreenに格納する
         numberOnScreen = Double(sender.tag - 1)
         
-        // ボタンは必ず整数なので、Int型になおしてからString型にして画面に表示する
+        // ボタンの数字は必ず整数なので、Int型になおしてからString型にして画面に表示する
         resultLabel.text = String(Int(numberOnScreen))
     }
     
     // クリアボタンを押したとき
     @IBAction func tapClearButton(_ sender: UIButton) {
-        
         // すべてクリアする
         numberOnScreen = 0
         previousNumber = 0
@@ -66,11 +66,11 @@ class ViewController: UIViewController {
     // = ボタンを押したとき
     @IBAction func tapEqualButtpn(_ sender: UIButton) {
         
-        sender.layer.borderColor = UIColor.black.cgColor
-        
         var result: Double = 0
         
+        // propの値をもとに、やりたい計算を行う
         switch prop{
+        // 割り算
         case .devide:
             result = previousNumber / numberOnScreen
             
@@ -79,9 +79,12 @@ class ViewController: UIViewController {
                 resultLabel.text = "error"
                 return
             }
+        
+        // 掛け算
         case .milti:
             result = previousNumber * numberOnScreen
-            
+        
+        // 引き算
         case .minus:
             result = previousNumber - numberOnScreen
             
@@ -90,11 +93,9 @@ class ViewController: UIViewController {
             
         case .none:
             return
-        
         }
         
-        
-        // 表示する値が、整数なのときは整数で、小数のときは小数で表示する
+        // 画面に表示する値が、整数のとき(最後の文字が0)は整数で、小数のときは小数で表示する
         if String(result).last == "0" {
             // 整数
             resultLabel.text = String(Int(result))
@@ -107,9 +108,10 @@ class ViewController: UIViewController {
     //  ÷, ×, -, + を押したときの処理
     @IBAction func tappedAction(_ sender: UIButton) {
         
-        // previousNumberの定義(そのとき画面に表示されている数字を格納)
+        // previousNumberにそのとき画面に表示されている数字を格納する
         previousNumber = Double(resultLabel.text ?? "0") ?? 0
         
+        // タグ番号によってpropの値を変える
         switch sender.tag {
             
         // ÷ボタンを押したとき
@@ -130,9 +132,7 @@ class ViewController: UIViewController {
             
         default:
            print("エラー")
-        
         }
-        
     }
 }
 
