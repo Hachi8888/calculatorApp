@@ -79,6 +79,9 @@
                                                 <rect key="frame" x="310.5" y="0.0" width="103.5" height="135.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                                 <state key="normal" title="×"/>
+                                                <connections>
+                                                    <action selector="buttonTimes:" destination="BYZ-38-t0r" eventType="touchUpInside" id="LHG-4L-1Ze"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                     </stackView>

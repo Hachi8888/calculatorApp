@@ -17,9 +17,12 @@ class ViewController: UIViewController {
     @IBAction func buttonC(_ sender: Any) {
     }
     
-    
-   // ÷ボタン
+    // ÷ボタン
     @IBAction func buttonDevided(_ sender: Any) {
+    }
+    
+    // ×ボタン
+    @IBAction func buttonTimes(_ sender: Any) {
     }
     
     // +ボタン
