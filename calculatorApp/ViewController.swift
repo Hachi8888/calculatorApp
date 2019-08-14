@@ -35,12 +35,12 @@ class ViewController: UIViewController {
     
     }
     
-    
     // 画面の表示用のラベル
     @IBOutlet weak var resultLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         // Do any additional setup after loading the view.
     }
     
@@ -51,12 +51,12 @@ class ViewController: UIViewController {
         
         // ボタンは必ず整数なので、Int型になおしてからString型にして画面に表示する
         resultLabel.text = String(Int(numberOnScreen))
-        
-
     }
     
-    // クリアボタン
+    // クリアボタンを押したとき
     @IBAction func tapClearButton(_ sender: UIButton) {
+        
+        // すべてクリアする
         numberOnScreen = 0
         previousNumber = 0
         resultLabel.text = ""
@@ -65,7 +65,11 @@ class ViewController: UIViewController {
     
     // = ボタンを押したとき
     @IBAction func tapEqualButtpn(_ sender: UIButton) {
+        
+        sender.layer.borderColor = UIColor.black.cgColor
+        
         var result: Double = 0
+        
         switch prop{
         case .devide:
             result = previousNumber / numberOnScreen
@@ -90,7 +94,7 @@ class ViewController: UIViewController {
         }
         
         
-        // 表示する値が整数なら整数で、小数なら小数で表示する
+        // 表示する値が、整数なのときは整数で、小数のときは小数で表示する
         if String(result).last == "0" {
             // 整数
             resultLabel.text = String(Int(result))
@@ -98,8 +102,6 @@ class ViewController: UIViewController {
             // 小数
             resultLabel.text = String(result)
         }
-        
-        
     }
     
     //  ÷, ×, -, + を押したときの処理
@@ -132,9 +134,6 @@ class ViewController: UIViewController {
         }
         
     }
-    
-    
-    
-
 }
+
 
