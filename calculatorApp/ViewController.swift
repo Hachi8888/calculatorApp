@@ -8,119 +8,120 @@
 
 // Landscape Left/Right のチェックを外して、画面回転時もレイアウトが変わらないようにした
 
-import UIKit
 
-class ViewController: UIViewController {
-    
- // 変数一覧
-    // 画面に表示する数字
-    var numberOnScreen: Double = 0
-    // 最初に入力した数字
-    var previousNumber: Double = 0
-    // 演算子（+、 -、 ×、 ÷）デフォルトは + とする
-    var prop: property = .plus
-    
-    // 演算子の列挙体を設定する
-    enum property {
-     case plus // 足す
-     case minus // 引く
-     case milti // かける
-     case devide // 割る
-     case none  //何も設定ない
-    }
-    
-    // 画面の表示用のラベル
-    @IBOutlet weak var resultLabel: UILabel!
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    import UIKit
 
-        resultLabel.text = "0"
+    class ViewController: UIViewController {
 
-    }
-    
-    // 数字ボタンを押したときの処理
-    @IBAction func tappedNum(_ sender: UIButton) {
-        // タグ番号をもとに、選んだボタンの数字をnumberOnScreenに格納する
-        numberOnScreen = Double(sender.tag - 1)
-        
-        // ボタンの数字は必ず整数なので、Int型になおしてからString型にして画面に表示する
-        resultLabel.text = String(Int(numberOnScreen))
-    }
-    
-    // クリアボタンを押したとき
-    @IBAction func tapClearButton(_ sender: UIButton) {
-        // すべてクリアする
-        numberOnScreen = 0
-        previousNumber = 0
-        resultLabel.text = "0"
-        prop = .none
-    }
-    
-    // = ボタンを押したとき
-    @IBAction func tapEqualButtpn(_ sender: UIButton) {
-        
+        /// 画面上の数字
+        var numberOnScreen:Double = 0
+        /// 前回表示されていた数字
+        var previousNumber:Double = 0
+        /// 四則演算の演算子
+        var operation: String = ""
+        /// 計算結果を入れる
         var result: Double = 0
-        
-        // propの値をもとに、やりたい計算を行う
-        switch prop{
-        // 割り算
-        case .devide:
-            result = previousNumber / numberOnScreen
-            
-            // 0除算の場合、errorを返す
-            if result.isInfinite {
-                resultLabel.text = "error"
-                return
+        /// 数値が入力されたかどうかの判断
+        var inValue: Bool = false
+        /// 計算してもいいかどうかの判断
+        var performingMath = false
+        /// ラベルを編集できるかどうか
+        var editLabel: Bool = true
+
+        // 計算結果を表示するラベル
+        @IBOutlet weak var resultCalculate: UILabel!
+
+
+        override func viewDidLoad() {
+            super.viewDidLoad()
+        }
+
+        /// クリアする関数
+        func allClear() {
+            // クリアする
+            resultCalculate.text = ""
+            result = 0
+            previousNumber = 0
+            numberOnScreen = 0
+            operation = ""
+            inValue = false
+            performingMath = false
+            editLabel = true
+        }
+
+        // 0~9のボタン
+        @IBAction func numbers(_ sender: UIButton) {
+
+            // 演算結果の上書き防止
+            if editLabel {
+                if performingMath {
+                    resultCalculate.text = String(sender.tag)
+                    numberOnScreen = Double(resultCalculate.text!)!
+                    performingMath = false
+                } else {
+                    resultCalculate.text = resultCalculate.text! + String(sender.tag)
+                    numberOnScreen = Double(resultCalculate.text!)!
+                }
             }
-        // 掛け算
-        case .milti:
-            result = previousNumber * numberOnScreen
-        // 引き算
-        case .minus:
-            result = previousNumber - numberOnScreen
-        // 足し算
-        case .plus:
-            result = previousNumber + numberOnScreen
-        // 何もしない
-        case .none:
-            return
+            inValue = true
         }
-        
-        // 画面に表示する値が、整数のとき(最後の文字が0)は整数で、小数のときは小数で表示する
-        if String(result).last == "0" {
-            // 整数
-            resultLabel.text = String(Int(result))
-        } else {
-            // 小数
-            resultLabel.text = String(result)
+
+        // +,-,÷,×,=,Cのボタン
+            @IBAction func actions(_ sender: UIButton) {
+
+            // ラベルを書き換えOK
+            editLabel = true
+            if sender.currentTitle == "C" { // Cが押されたとき
+                // クリアする
+                allClear()
+            } else if inValue && sender.currentTitle == "="  {// = が押された時
+                // 演算子を判定して、演算を実行
+                switch operation {
+                case "÷":
+                    result = previousNumber / numberOnScreen
+                case "×":
+                    result = previousNumber * numberOnScreen
+                case "+":
+                    result = previousNumber + numberOnScreen
+                case "-":
+                    result = previousNumber - numberOnScreen
+                default:
+                    break
+                }
+                // 小数点で値を分離
+                let shosus: [String] = String(result).components(separatedBy: ".")
+
+                // 計算結果が無限ではない、かつ整数である時の処理
+                if !result.isInfinite && shosus.last == "0" {
+                    // 小数点以下が0であるなら
+                    resultCalculate.text = String(Int(result))
+                } else {
+                    // 小数点以下が0でない = 少数で表示する
+                    resultCalculate.text = String(result)
+                }
+                // 数値が入っている
+                inValue = true
+                // 数値を足せないようにする
+                editLabel = false
+            } else { // +,-,×,÷のいずれかが押されたとき
+                // 画面に表示されている数字を変数に代入
+                if inValue {
+                    previousNumber = Double(resultCalculate.text!)!
+                }
+                // 「 = 」以外の演算子を表示
+                if sender.currentTitle != "=" {
+                    resultCalculate.text = sender.currentTitle
+                }
+                // 数値は入っていない
+                inValue = false
+                // 演算子を記憶
+                operation = sender.currentTitle!
+                // 計算していい
+                performingMath = true
+            }
         }
+
     }
-    
-    //  ÷, ×, -, + を押したときの処理
-    @IBAction func tappedAction(_ sender: UIButton) {
-        
-        // previousNumberにそのとき画面に表示されている数字を格納する
-        previousNumber = Double(resultLabel.text ?? "0") ?? 0
-        
-        // タグ番号によってpropの値を変える
-        switch sender.tag {
-        // ÷ボタンを押したとき
-        case 12:
-           prop = .devide
-        // ×ボタンを押したとき
-        case 13:
-            prop = .milti
-       // -ボタンを押したとき
-        case 14:
-            prop = .minus
-      // +ボタンを押したとき
-        case 15:
-            prop = .plus
-        default:
-           print("エラー")
-        }
-    }
-}
+
 
 
