@@ -15,13 +15,8 @@ class ViewController: UIViewController {
  // 変数一覧
     // 画面に表示する数字
     var numberOnScreen: Double = 0
-    
     // 最初に入力した数字
     var previousNumber: Double = 0
-    
-    // 計算プロセスに進んでいいかの判断値（真偽値）
-    var performingMath: Bool = true
-    
     // 演算子（+、 -、 ×、 ÷）デフォルトは + とする
     var prop: property = .plus
     
@@ -32,17 +27,16 @@ class ViewController: UIViewController {
      case milti // かける
      case devide // 割る
      case none  //何も設定ない
-    
     }
     
     // 画面の表示用のラベル
     @IBOutlet weak var resultLabel: UILabel!
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Do any additional setup after loading the view.
+
+        resultLabel.text = "0"
+
     }
     
     // 数字ボタンを押したときの処理
@@ -59,7 +53,7 @@ class ViewController: UIViewController {
         // すべてクリアする
         numberOnScreen = 0
         previousNumber = 0
-        resultLabel.text = ""
+        resultLabel.text = "0"
         prop = .none
     }
     
@@ -79,18 +73,16 @@ class ViewController: UIViewController {
                 resultLabel.text = "error"
                 return
             }
-        
         // 掛け算
         case .milti:
             result = previousNumber * numberOnScreen
-        
         // 引き算
         case .minus:
             result = previousNumber - numberOnScreen
-            
+        // 足し算
         case .plus:
             result = previousNumber + numberOnScreen
-            
+        // 何もしない
         case .none:
             return
         }
@@ -113,23 +105,18 @@ class ViewController: UIViewController {
         
         // タグ番号によってpropの値を変える
         switch sender.tag {
-            
         // ÷ボタンを押したとき
         case 12:
            prop = .devide
-            
         // ×ボタンを押したとき
         case 13:
             prop = .milti
-       
-       //  -ボタンを押したとき
+       // -ボタンを押したとき
         case 14:
             prop = .minus
-
       // +ボタンを押したとき
         case 15:
             prop = .plus
-            
         default:
            print("エラー")
         }
